@@ -1,0 +1,30 @@
+{
+  "name": "antigravity-desktop-auto-accept-no-ide",
+  "version": "1.0.0",
+  "description": "Background auto-accept and auto-submit service for Antigravity Desktop App (v2.x Electron) with multi-window support and mic safety.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "install-startup": "powershell -ExecutionPolicy Bypass -File scripts/install-startup.ps1",
+    "uninstall-startup": "powershell -ExecutionPolicy Bypass -File scripts/uninstall-startup.ps1"
+  },
+  "keywords": [
+    "antigravity",
+    "antigravity-2.0",
+    "antigravity-desktop",
+    "electron",
+    "cdp",
+    "automation",
+    "auto-accept",
+    "auto-submit",
+    "productivity"
+  ],
+  "author": "Arturo Cabarcas",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
