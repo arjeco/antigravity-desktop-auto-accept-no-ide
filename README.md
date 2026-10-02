@@ -1,134 +1,135 @@
 # Antigravity Desktop Auto-Accept (No-IDE) 🚀
 
-> Servicio autónomo y ligero en segundo plano para auto-aprobar permisos de herramientas y preguntas (`Submit ↵`) de forma desatendida en **Antigravity Desktop App (v2.x Electron)** con soporte multiventana y protección de micrófono.
+[ 🇺🇸 English ](README.md) | [ 🇪🇸 Español ](README.es.md)
+
+> A lightweight, autonomous background daemon designed to automatically accept tool execution permissions and question prompts (`Submit ↵`) in **Antigravity Desktop App (v2.x Electron)** with multi-window multitasking support and microphone safety.
 
 ---
 
-## ⚠️ ¿Por qué este repositorio? (Diferencia con la versión IDE)
+## ⚠️ Why This Repository? (Key Difference from the IDE Version)
 
-Existen dos formas principales de usar Antigravity:
+Antigravity is available in two distinct formats:
 
-| Versión | Arquitectura | ¿Funciona este script? |
+| Version | Architecture | Does this tool work with it? |
 | :--- | :--- | :---: |
-| **Antigravity Desktop App (v2.x)** | Aplicación independiente construida en Electron. Las extensiones convencionales de VS Code **no tienen acceso al DOM** de las conversaciones. Requiere comunicarse mediante Chrome DevTools Protocol (CDP). | ✅ **SÍ (Diseñado para esta)** |
-| **Antigravity IDE (VS Code Fork)** | Entorno de desarrollo tradicional basado en VS Code. Soporta extensiones nativas del marketplace de extensiones. | ❌ **NO (Usa la extensión estándar de VS Code)** |
+| **Antigravity Desktop App (v2.x)** | Standalone Electron application. Standard VS Code extensions **cannot access the DOM** of conversations. Requires direct automation via Chrome DevTools Protocol (CDP). | ✅ **YES (Specially designed for this)** |
+| **Antigravity IDE (VS Code Fork)** | Classic VS Code-based development environment. Supports native marketplace extensions. | ❌ **NO (Use standard VS Code extension)** |
 
-Este repositorio fue creado específicamente para la **versión Desktop independiente**, conectándose al puerto de depuración de Electron para interactuar directamente con la interfaz sin intervención manual.
-
----
-
-## ✨ Características Principales
-
-- **🛡️ Modo Seguro (Submit-Only):**
-  - Selecciona automáticamente la Opción 1 (*"Yes, allow this time"*) y hace clic en `Submit ↵`.
-  - **No** auto-acepta planes de implementación ni botones de comandos críticos (`Run` / `Proceed` / `Accept`), permitiéndote leer y validar las propuestas antes de autorizarlas.
-- **🎙️ Mic-Safe (Protección contra activación de micrófono):**
-  - Hace clic exclusivamente a través del árbol DOM (`element.click()`), filtrando y descartando cualquier botón con etiquetas de voz o micrófono (`Record voice memo`). No utiliza clics ciegos por coordenadas.
-- **🪟 Soporte Multiventana:**
-  - Si abres múltiples ventanas en Antigravity (`Ctrl + Shift + N` o diferentes proyectos), el servicio detecta cada ventana en tiempo real y ejecuta el auto-aceptar en todas en paralelo.
-- **💤 100% Desatendido y Minimizado:**
-  - Puedes tener Antigravity minimizado o trabajar en otras aplicaciones; el servicio continuará enviando los permisos sin perder el foco.
-- **🚀 Inicio Silencioso en Windows:**
-  - Incluye scripts para registrarse en el Inicio de Windows y correr en segundo plano sin abrir ventanas de consola negras molestas.
+This repository was created specifically for the **standalone Desktop App**, establishing a bridge via Electron's debugging port to interact directly with the interface without manual intervention.
 
 ---
 
-## 📋 Requisitos Previos
+## ✨ Key Features
+
+- **🛡️ Safe Mode (Submit-Only):**
+  - Automatically selects Option 1 (*"Yes, allow this time"*) and clicks `Submit ↵`.
+  - **Does NOT** auto-accept implementation plans or critical commands (`Run` / `Proceed` / `Accept`), allowing you to review and validate proposals before authorizing them.
+- **🎙️ Mic-Safe (Zero accidental voice recordings):**
+  - Clicks exclusively through the DOM tree (`element.click()`), explicitly filtering and ignoring any element with voice or microphone attributes (`Record voice memo`). No blind coordinate clicks.
+- **🪟 Multi-Window Multitasking Support:**
+  - If you open multiple Antigravity windows (`Ctrl + Shift + N` or separate projects), the daemon dynamically detects each window and runs auto-approval across all of them in parallel.
+- **💤 100% Unattended & Minimized Operation:**
+  - Works seamlessly while Antigravity is minimized or running behind other windows without stealing focus.
+- **🚀 Silent Windows Startup:**
+  - Includes helper scripts to register as a Windows Startup task, running completely silently in the background without opening black terminal windows.
+
+---
+
+## 📋 Prerequisites
 
 1. **Windows 10 / 11**
-2. **Node.js** (versión 18 o superior) $\rightarrow$ [Descargar Node.js](https://nodejs.org/)
-3. **Antigravity Desktop App** ejecutándose con el puerto de depuración habilitado (`--remote-debugging-port=9000`).
+2. **Node.js** (v18 or higher) $\rightarrow$ [Download Node.js](https://nodejs.org/)
+3. **Antigravity Desktop App** launched with the remote debugging flag (`--remote-debugging-port=9000`).
 
 ---
 
-## ⚙️ Configuración del Acceso Directo de Antigravity (Paso Único)
+## ⚙️ Antigravity Shortcut Setup (One-Time Step)
 
-Para permitir que el servicio se comunique con la aplicación de escritorio, Antigravity debe iniciarse con el puerto CDP abierto:
+To allow the service to communicate with the desktop application, Antigravity must be launched with the CDP port enabled:
 
-1. Ve a tu acceso directo de **Antigravity** (en el Escritorio o Barra de tareas).
-2. Haz clic derecho $\rightarrow$ **Propiedades**.
-3. En la pestaña **Acceso directo**, busca el campo **Destino**.
-4. Al final de la ruta, añade un espacio y:
+1. Right-click your **Antigravity** shortcut (on your Desktop, Start Menu, or Taskbar) $\rightarrow$ **Properties**.
+2. In the **Shortcut** tab, locate the **Target** field.
+3. At the very end of the line, add a space and:
    ```text
    --remote-debugging-port=9000
    ```
-   *Ejemplo:*
+   *Example:*
    ```text
-   "C:\Users\tu-usuario\AppData\Local\Programs\Antigravity\Antigravity.exe" --remote-debugging-port=9000
+   "C:\Users\your-user\AppData\Local\Programs\Antigravity\Antigravity.exe" --remote-debugging-port=9000
    ```
-5. Haz clic en **Aplicar** y **Aceptar**.
-6. Cierra Antigravity por completo y vuelve a abrirlo desde ese acceso directo.
+4. Click **Apply** and **OK**.
+5. Restart Antigravity completely using this shortcut.
 
 ---
 
-## 🚀 Instalación Rápida
+## 🚀 Quick Start
 
-### 1. Clonar el repositorio
-Abre una terminal (PowerShell o CMD) y ejecuta:
+### 1. Clone the repository
+Open a terminal (PowerShell or Command Prompt) and run:
 ```bash
 git clone https://github.com/arjeco/antigravity-desktop-auto-accept-no-ide.git
 cd antigravity-desktop-auto-accept-no-ide
 ```
 
-### 2. Instalar dependencias
+### 2. Install dependencies
 ```bash
 npm install
 ```
 
 ---
 
-## 💻 Modos de Uso
+## 💻 Usage Options
 
-### Opción A: Ejecución normal (Para probar)
+### Option A: Interactive run (For testing)
 ```bash
 npm start
 ```
-Verás la consola mostrando la detección de ventanas y cada clic en `Submit` realizado.
+You will see the console reporting detected windows and every auto-clicked `Submit` action in real time.
 
-### Opción B: Inicio automático en segundo plano con Windows (Recomendado)
-Para que se ejecute siempre de forma invisible al encender tu equipo:
+### Option B: Automatic silent Windows startup (Recommended)
+To run permanently and invisibly every time your PC boots:
 ```powershell
 npm run install-startup
 ```
-> Esto creará un acceso directo en tu carpeta de inicio (`shell:startup`) que corre el script de forma totalmente transparente mediante `wscript.exe`.
+> This creates a shortcut in your Startup folder (`shell:startup`) that launches the service via `wscript.exe` with zero visible console windows.
 
-### Para desinstalar el inicio automático:
+### To uninstall Windows startup:
 ```powershell
 npm run uninstall-startup
 ```
 
 ---
 
-## 🪵 Registro de Logs
+## 🪵 Live Logging
 
-El servicio guarda un historial detallado de todas las acciones en:
+The daemon maintains an activity log at:
 ```text
 %USERPROFILE%\.antigravity\auto_accept.log
 ```
 
-Para ver la actividad en tiempo real desde PowerShell:
+To watch logs live in PowerShell:
 ```powershell
 Get-Content "$env:USERPROFILE\.antigravity\auto_accept.log" -Wait -Tail 20
 ```
 
 ---
 
-## ❓ Preguntas Frecuentes (FAQ)
+## ❓ Frequently Asked Questions (FAQ)
 
-#### ¿Qué pasa si abro varias ventanas de Antigravity?
-El servicio escanea automáticamente todas las ventanas activas cada 1.5 segundos. Todas las ventanas abiertas tendrán el auto-aceptar activo simultáneamente.
+#### What happens if I open multiple Antigravity windows?
+The service scans all active windows every 1.5 seconds. All open windows will automatically have auto-accept running concurrently.
 
-#### ¿Por qué en una misma ventana no se auto-acepta si la conversación está en la barra lateral?
-Antigravity es una aplicación SPA (Single Page Application) y solo renderiza en el DOM la conversación que tienes en pantalla. Las conversaciones en la barra lateral no tienen sus botones creados en la interfaz hasta que las abres.  
-**Solución:** Si necesitas trabajar en varias conversaciones en paralelo de forma desatendida, ábrelas en ventanas separadas con **`Ctrl + Shift + N`**.
+#### Why does auto-accept pause if a conversation is in the sidebar?
+Antigravity is a Single Page Application (SPA) and only renders the currently active conversation in the DOM. Background conversations in the sidebar do not have their buttons rendered in memory until selected.  
+**Solution:** If you want to run parallel tasks unattended, open each task in a separate window using **`Ctrl + Shift + N`**.
 
-#### ¿Cómo sé si el puerto 9000 está activo?
-Abre en tu navegador: [http://127.0.0.1:9000/json/list](http://127.0.0.1:9000/json/list). Deberías ver un JSON con los datos de las ventanas de Antigravity abiertas.
+#### How do I know if port 9000 is open?
+Open this URL in your web browser: [http://127.0.0.1:9000/json/list](http://127.0.0.1:9000/json/list). You should see a JSON array representing the active Antigravity windows.
 
 ---
 
-## 📄 Licencia
+## 📄 License
 
-Distribuido bajo la Licencia **MIT**. Consulta el archivo [`LICENSE`](LICENSE) para más detalles.
+Distributed under the **MIT** License. See [`LICENSE`](LICENSE) for more information.
 
-Desarrollado y mantenido por **Arturo Cabarcas**.
+Developed and maintained by **Arturo Cabarcas**.
